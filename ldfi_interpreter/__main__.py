@@ -98,7 +98,9 @@ def combine_by_uuid(traces):
     """
     """
     trace_flows = {}
+    new_records = []
 
+    # 1. aggregate requests and responses by uuid
     for record in traces["records"]:
         try:
             trace_flows[record["uuid"]].append(record)
@@ -106,27 +108,40 @@ def combine_by_uuid(traces):
             trace_flows[record["uuid"]] = []
             trace_flows[record["uuid"]].append(record)
 
+    # 2. Sort request response flows
     for key in trace_flows:
         data = trace_flows[key]
         data.sort(key=lambda x: x["timestamp"])
         trace_flows[key] = data
 
-    traces["records"] = trace_flows
+    # 3. Prune responses
+    for key in trace_flows:
+        data = trace_flows[key]
+        data = data[:2]
+        trace_flows[key] = data
+
+    # 4. Prune failed requests and combine all records
+    for key in trace_flows:
+        data = trace_flows[key]
+
+        if len(data) == 2:
+            for record in data:
+                new_records.append(record)
+
+    traces["records"] = new_records
     return traces
 
 
 def main():
     test_file = open("./testoutput.json", "r")
     data = json.load(test_file)
-    out_file = open("./out.json", "w+")
-    out_file.write(json.dumps(data, indent=4, sort_keys=True))
-    out_file.close()
-
-    input_file = open("./out.json", "r")
-    data = json.load(input_file)
+    test_file.close()
 
     data = combine_by_uuid(data)
 
+    out_file = open("./out.json", "w+")
+    out_file.write(json.dumps(data, indent=4, sort_keys=True))
+    out_file.close()
 
 if __name__ == "__main__":
     main()
