@@ -5,6 +5,9 @@ LDFI Integration with 3MileBeach
 In order to get `graphviz` to work on my Mac, I needed to install `graphviz` via Homebrew like so:
 ```
     brew install graphviz
+
+    OR
+    You need to make sure the Graphviz executables are on your systems' PATH
 ```
 
 ### Hipster Shop DAG Notes
