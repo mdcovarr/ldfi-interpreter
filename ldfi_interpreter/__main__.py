@@ -5,93 +5,28 @@ import json
 from graphviz import Digraph
 
 
-def directed_acyclic_graph_bfs(starting, edges):
+def directed_acyclic_graph(graph):
     """
-        Function to generate a directed acyclic graph
-        with the help of breadth first search algorithm
-
-        procedure BFS(G, root) is
-            let Q be a queue
-            label root as discovered
-            Q.enqueue(root)
-            while Q is not empty do
-                v := Q.dequeue()
-                if v is the goal then
-                    return v
-                for all edges from v to w in G.adjacentEdges(v) do
-                    if w is not labeled as discovered then
-                        label w as discovered
-                        Q.enqueue(w)
-
-        Parameters:
-        starting (str): name of the starting location node
-        edges (list): list of edges that we would like to traverse
-
-        Returns:
-
+        Method used to create a directed acyclic graph
     """
-    queue = []
+    dot = Digraph(comment="Test Home Request", format="png")
     nodes = []
-    # Need to mark starting as discovered
-    dot = Digraph(comment="Test Home Request")
-    dot.node(starting, label=starting)
-    nodes.append(starting)
 
-    # Add edges that starting adds requests to
-    i = 0
-    while i < len(edges):
-        edge = edges[i]
+    for key in graph:
+        if key not in nodes:
+            nodes.append(key)
+            dot.node(key, label=key)
 
-        if starting == edge["service"] and edge["type"] == 1:
-            queue.append(edges.pop(i))
-        else:
-            i += 1
+        neighbors = graph[key]
 
-    # now we need to determine name of service that
-    # is receiving the sent request
-    while len(queue) > 0:
-        req = queue.pop(0)
+        for neighbor in neighbors:
+            if neighbor not in nodes:
+                nodes.append(neighbor)
+                dot.node(neighbor, label=neighbor)
 
-        # looking for the corresponding response
-        i = 0
-        edge = None
-        while i < len(edges):
-            edge = edges[i]
-            if req["uuid"] == edge["uuid"] and edge["type"] == 2:
-                edge = edges.pop(i)
-                break
-                queue.append(edges.pop(i))
-                if edge["service"] not in nodes:
-                    dot.node(edge["service"], label=edge["service"])
-                    nodes.append(edge["service"])
-                    # Need to add edges
-                    dot.edge(req["service"], edge["service"])
-            else:
-                i += 1
+            dot.edge(key, neighbor)
 
-
-        # if node not in nodes list, then add
-        if edge["service"] not in nodes:
-            dot.node(edge["service"], label=edge["service"])
-            nodes.append(edge["service"])
-
-        # Now add all edges that current node is communicating too
-        node = edge["service"]
-        i = 0
-        while i < len(edges):
-            edge = edges[i]
-            if node == edge["sevice"] and edge["type"] == 1:
-                pass
-
-
-
-        break
-
-
-
-    print(queue)
-    print(nodes)
-    print(dot.source)
+    dot.render("dag.gv", view=True)
 
 
 def records_preprocessing(traces):
@@ -155,11 +90,14 @@ def main():
     data = records_preprocessing(data)
     print(data)
 
+    directed_acyclic_graph(data)
+
     """
     out_file = open("./out.json", "w+")
     out_file.write(json.dumps(data, indent=4, sort_keys=True))
     out_file.close()
     """
+
 
 if __name__ == "__main__":
     main()
