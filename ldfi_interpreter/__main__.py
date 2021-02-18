@@ -94,11 +94,12 @@ def directed_acyclic_graph_bfs(starting, edges):
     print(dot.source)
 
 
-def combine_by_uuid(traces):
+def records_preprocessing(traces):
     """
     """
     trace_flows = {}
-    new_records = []
+    new_flows = {}
+    node_mapping = {}
 
     # 1. aggregate requests and responses by uuid
     for record in traces["records"]:
@@ -125,11 +126,25 @@ def combine_by_uuid(traces):
         data = trace_flows[key]
 
         if len(data) == 2:
-            for record in data:
-                new_records.append(record)
+            new_flows[key] = data
 
-    traces["records"] = new_records
-    return traces
+    # 5. Node to neighbors processing
+    for key in new_flows:
+        data = new_flows[key]
+
+        node = data[0]
+        neighbor = data[1]
+        try:
+            node_mapping[node["service"]].append(neighbor["service"])
+        except KeyError:
+            node_mapping[node["service"]] = []
+            node_mapping[node["service"]].append(neighbor["service"])
+
+    # 6. Make sure all neighbors are unique
+    for key in node_mapping:
+        node_mapping[key] = list(set(node_mapping[key]))
+
+    return node_mapping
 
 
 def main():
@@ -137,11 +152,14 @@ def main():
     data = json.load(test_file)
     test_file.close()
 
-    data = combine_by_uuid(data)
+    data = records_preprocessing(data)
+    print(data)
 
+    """
     out_file = open("./out.json", "w+")
     out_file.write(json.dumps(data, indent=4, sort_keys=True))
     out_file.close()
+    """
 
 if __name__ == "__main__":
     main()
