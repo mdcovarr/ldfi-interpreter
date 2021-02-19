@@ -10,6 +10,12 @@ from subprocess import check_call, CalledProcessError
 def handle_arguments():
     """
         Set script arguments
+
+        Parameters:
+        None
+
+        Returns:
+        parser (ArgumentParser object): parser for CLI
     """
     parser = argparse.ArgumentParser(description="Json pretty print tests")
 
@@ -22,6 +28,9 @@ def handle_arguments():
 
 
 def main():
+    """
+        Main Entrance
+    """
     parser = handle_arguments()
     args = parser.parse_args()
 

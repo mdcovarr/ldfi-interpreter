@@ -9,7 +9,13 @@ from graphviz import Digraph
 
 def handle_arguments():
     """
-        Set CLA
+        Method to Set CLA
+
+        Parameters:
+        None
+
+        Returns:
+        parser (ArgumentParser object)
     """
     parser = argparse.ArgumentParser(description="Take 3MileBeach trace and convert to DAG")
 
@@ -24,6 +30,13 @@ def handle_arguments():
 def directed_acyclic_graph(graph, output_file):
     """
         Method used to create a directed acyclic graph
+
+        Parameters:
+        graph (dict): graph node and node neighbors relation
+        output_file (string): name of the output file
+
+        Returns:
+        None
     """
     dot = Digraph(comment="Test Home Request", format="png")
     nodes = []
@@ -47,6 +60,14 @@ def directed_acyclic_graph(graph, output_file):
 
 def records_preprocessing(traces):
     """
+        Method used to preprocess trace information in order to
+        successfully create a DAG for a given request flow
+
+        Parameters:
+        traces (dict): Information about an individual trace
+
+        Returns:
+        node_mapping (dict): nodes and neighbors data for DAG
     """
     trace_flows = {}
     new_flows = {}
@@ -99,6 +120,9 @@ def records_preprocessing(traces):
 
 
 def main():
+    """
+        Main Entrance
+    """
     parser = handle_arguments()
     args = parser.parse_args()
 
