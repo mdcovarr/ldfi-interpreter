@@ -1,11 +1,27 @@
 """
     LDFI Interpreter main program execution
 """
+import argparse
+import sys
 import json
 from graphviz import Digraph
 
 
-def directed_acyclic_graph(graph):
+def handle_arguments():
+    """
+        Set CLA
+    """
+    parser = argparse.ArgumentParser(description="Take 3MileBeach trace and convert to DAG")
+
+    parser.add_argument("-i", "--input", dest="input_file",
+                        help="input json file")
+    parser.add_argument("-o", "--output", dest="output_file",
+                        help="output DAG graph file")
+
+    return parser
+
+
+def directed_acyclic_graph(graph, output_file):
     """
         Method used to create a directed acyclic graph
     """
@@ -26,7 +42,7 @@ def directed_acyclic_graph(graph):
 
             dot.edge(key, neighbor)
 
-    dot.render("dag.gv", view=True)
+    dot.render(output_file, view=True)
 
 
 def records_preprocessing(traces):
@@ -83,20 +99,19 @@ def records_preprocessing(traces):
 
 
 def main():
-    test_file = open("./testoutput.json", "r")
-    data = json.load(test_file)
-    test_file.close()
+    parser = handle_arguments()
+    args = parser.parse_args()
+
+    if not args.input_file or not args.output_file:
+        parser.print_help()
+        sys.exit(1)
+
+    input_file = open(args.input_file, "r")
+    data = json.load(input_file)
+    input_file.close()
 
     data = records_preprocessing(data)
-    print(data)
-
-    directed_acyclic_graph(data)
-
-    """
-    out_file = open("./out.json", "w+")
-    out_file.write(json.dumps(data, indent=4, sort_keys=True))
-    out_file.close()
-    """
+    directed_acyclic_graph(data, args.output_file)
 
 
 if __name__ == "__main__":
