@@ -1,38 +1,127 @@
 """
     Create a client connection to Book Info frontend
+    in order to support 3MileBeach Integration. And
+    the ability to orchestrate fault injection and tracing
 """
 import http
 import uuid
+import time
+import simplejson as json
+
+"""
+    Constants
+"""
+SEND = 1
+RECV = 2
 
 
-class RestClient:
+class Client:
+    """
+        HTTP Client used to orchestrate 3MileBeach
+    """
     def __init__(self, host, port):
-        self.client = None
+        """
+            Default Constructor
+        """
+        self.conn = None
+        self.requests = None
         self.host = host
         self.port = port
         self.address = "{0}:{1}".format(host, port)
-        self.uuid = uuid.uuid4()
+        self.uuid = uuid.uuid4().hex
 
     def init(self):
         self.conn = http.client.HTTPConnection(self.host, int(self.port))
         self.conn.connect()
 
+    def generate_record(self, **kwargs):
+        """
+            Used to generate a record. Request or Response
+            for the client Rest HTTP connection
+        """
+        return {
+            "message_name": kwargs["message_name"],
+            "service": kwargs["service"],
+            "timestamp": int(time.time()),
+            "type": kwargs["type"],
+            "uuid": kwargs["uuid"]
+        }
+
     def run(self):
         """
             request(method, url, body=None, headers={}, ...)
         """
-        header = {
-            'FI_TRACE': 'true'
-        }
-        self.conn.request("GET", "/productpage")
-        response = self.conn.getresponse()
-        data = response.read()
-        headers = response.getheaders()
-        print("Status: {}".format(response.status))
-        self.conn.close()
+        # Iterate throught each request/trace
+        for request in self.requests["requests"]:
+            fi_trace = {
+                "id": uuid.uuid4().hex,
+                "records": [],
+                "tfis": []
+            }
+
+            # Create connection
+            cookie_url = request["cookie_url"]
+            self.conn = http.client.HTTPConnection(cookie_url)
+            self.conn.connect()
+
+            # Each top level request/trace can be composed of
+            # other requests
+            for inner_request in request["requests"]:
+                # 1. Get request paramerters
+                method = inner_request["method"]
+                url = inner_request["URL"]
+                message_name = inner_request["message_name"]
+
+                # Add record of Request
+                fi_trace["records"].append(self.generate_record(uuid=fi_trace["id"], type=SEND, message_name=message_name, service=self.uuid))
+
+                # 2. Send Request
+                headers = {
+                    "fi-trace": json.dumps(fi_trace)
+                }
+                self.conn.request(method, url, headers=headers)
+
+                # 3. Get Response
+                response = self.conn.getresponse()
+                data = response.read()
+                data = response.headers["fi-trace"]
+                fi_trace = json.loads(data)
+
+                # Add record of Response
+                fi_trace["records"].append(self.generate_record(uuid=fi_trace["id"], type=RECV, message_name=message_name, service=self.uuid))
+
+            outfile = open("./trace.json", "w+")
+            outfile.write(json.dumps(fi_trace, indent=4, sort_keys=True))
+            outfile.close()
+            self.conn.close()
+
+
+    def import_requests(self, filename):
+        """
+            Helper function used to import
+            3MileBeach requests
+        """
+        try:
+            with open(filename, "r") as f:
+                data = json.load(f)
+                self.requests = data
+        except Exception as e:
+            print(e)
+
+
+    def send_requests(self):
+        """
+            Method used to handle sending requests
+            to book info application
+        """
+        pass
+
+
+def main():
+    client = Client("127.0.0.1", 8090)
+    client.import_requests("./requests.json")
+    client.run()
 
 
 if __name__ == "__main__":
-    client = RestClient("localhost", 80)
-    client.init()
-    client.run()
+    main()
