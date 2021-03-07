@@ -7,12 +7,14 @@ import http
 import uuid
 import time
 import simplejson as json
+import os
 
 """
     Constants
 """
 SEND = 1
 RECV = 2
+CWD = os.path.dirname(os.path.realpath(__file__))
 
 
 class Client:
@@ -29,6 +31,7 @@ class Client:
         self.port = port
         self.address = "{0}:{1}".format(host, port)
         self.uuid = "client-{}".format(uuid.uuid4().hex)
+        self.trace_dir = os.path.join(CWD, "..", "traces")
 
     def init(self):
         self.conn = http.client.HTTPConnection(self.host, int(self.port))
@@ -52,6 +55,7 @@ class Client:
             request(method, url, body=None, headers={}, ...)
         """
         # Iterate throught each request/trace
+        i = 0
         for request in self.requests["requests"]:
             fi_trace = {
                 "id": uuid.uuid4().hex,
@@ -59,7 +63,9 @@ class Client:
                 "tfis": []
             }
 
-            # Create connection
+            trace_outfile = os.path.join(CWD, "..", "traces/trace-{}.json".format(i))
+
+            # 1. Create connection
             cookie_url = request["cookie_url"]
             self.conn = http.client.HTTPConnection(cookie_url)
             self.conn.connect()
@@ -67,7 +73,7 @@ class Client:
             # Each top level request/trace can be composed of
             # other requests
             for inner_request in request["requests"]:
-                # 1. Get request paramerters
+                # Get request paramerters
                 method = inner_request["method"]
                 url = inner_request["URL"]
                 message_name = inner_request["message_name"]
@@ -76,13 +82,13 @@ class Client:
                 request_message_name = "{} {}".format(message_name, "Request")
                 fi_trace["records"].append(self.generate_record(uuid=fi_trace["id"], type=SEND, message_name=request_message_name, service=self.uuid))
 
-                # 2. Send Request
+                # Send Request
                 headers = {
                     "fi-trace": json.dumps(fi_trace)
                 }
                 self.conn.request(method, url, headers=headers)
 
-                # 3. Get Response
+                # Get Response
                 response = self.conn.getresponse()
                 data = response.read()
                 data = response.headers["fi-trace"]
@@ -92,10 +98,25 @@ class Client:
                 response_message_name = "{} {}".format(message_name, "Response")
                 fi_trace["records"].append(self.generate_record(uuid=fi_trace["id"], type=RECV, message_name=response_message_name, service=self.uuid))
 
-            outfile = open("./trace.json", "w+")
+            # Output trace information
+            outfile = open(trace_outfile, "w+")
             outfile.write(json.dumps(fi_trace, indent=4, sort_keys=True))
             outfile.close()
+
+            # Create DAG and output
             self.conn.close()
+
+
+    def clear_trace_data(self):
+        """
+            Clearning out old stale trace information
+            in traces directory
+        """
+        for path in os.listdir(self.trace_dir):
+            full_path = os.path.join(self.trace_dir, path)
+
+            if os.path.isfile(full_path):
+                os.remove(full_path)
 
 
     def import_requests(self, filename):
@@ -113,7 +134,8 @@ class Client:
 
 def main():
     client = Client("127.0.0.1", 8090)
-    client.import_requests("./requests.json")
+    client.import_requests(os.path.join(CWD, "..", "requests/request-0.json"))
+    client.clear_trace_data()
     client.run()
 
 

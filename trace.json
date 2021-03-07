@@ -1,0 +1,76 @@
+{
+    "id": "d861aae07757422795e91080264ccf8d",
+    "records": [
+        {
+            "message_name": "Product Page Request",
+            "service": "client-03bf0f1a99de4e7ab989379aa7996133",
+            "timestamp": 1615078663,
+            "type": 1,
+            "uuid": "d861aae07757422795e91080264ccf8d"
+        },
+        {
+            "message_name": "Product Page Request",
+            "service": "productpageservice-4bec55d30ebb4cd9a66a3523a521b258",
+            "timestamp": 1615078663,
+            "type": 2,
+            "uuid": "d861aae07757422795e91080264ccf8d"
+        },
+        {
+            "message_name": "Product Details Request",
+            "service": "productpageservice-4bec55d30ebb4cd9a66a3523a521b258",
+            "timestamp": 1615078663,
+            "type": 1,
+            "uuid": "e580ff01215d4e339e343b665d9259be"
+        },
+        {
+            "message_name": "Product Details Request",
+            "service": "detailsservice-2b82fbd25b494255ac7a3403b9577ef3",
+            "timestamp": 1615078663,
+            "type": 2,
+            "uuid": "e580ff01215d4e339e343b665d9259be"
+        },
+        {
+            "message_name": "Product Details Response",
+            "service": "detailsservice-2b82fbd25b494255ac7a3403b9577ef3",
+            "timestamp": 1615078663,
+            "type": 1,
+            "uuid": "e580ff01215d4e339e343b665d9259be"
+        },
+        {
+            "message_name": "Product Details Response",
+            "service": "productpageservice-4bec55d30ebb4cd9a66a3523a521b258",
+            "timestamp": 1615078663,
+            "type": 2,
+            "uuid": "e580ff01215d4e339e343b665d9259be"
+        },
+        {
+            "message_name": "Products Review Request",
+            "service": "productpageservice-4bec55d30ebb4cd9a66a3523a521b258",
+            "timestamp": 1615078663,
+            "type": 1,
+            "uuid": "af97d70ca3584357bc85868ab45c8e89"
+        },
+        {
+            "message_name": "Product Review Response",
+            "service": "productpageservice-4bec55d30ebb4cd9a66a3523a521b258",
+            "timestamp": 1615078663,
+            "type": 2,
+            "uuid": "af97d70ca3584357bc85868ab45c8e89"
+        },
+        {
+            "message_name": "Product Page Response",
+            "service": "productpageservice-4bec55d30ebb4cd9a66a3523a521b258",
+            "timestamp": 1615078663,
+            "type": 1,
+            "uuid": "d861aae07757422795e91080264ccf8d"
+        },
+        {
+            "message_name": "Product Page Response",
+            "service": "client-03bf0f1a99de4e7ab989379aa7996133",
+            "timestamp": 1615078666,
+            "type": 2,
+            "uuid": "d861aae07757422795e91080264ccf8d"
+        }
+    ],
+    "tfis": []
+}
