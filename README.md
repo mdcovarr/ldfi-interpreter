@@ -75,11 +75,11 @@ This directory is used in order to make 3MileBeach request to the BookInfo appli
 
 
 ### `ldfi-interpreter/traces`
-Assuming that the BookInfo application is running, supports 3MileBeach, and the request go through, then the trace information will be added to this directory. For example. If we execute the `requests/request-0.json` request, the corresponding trace information will be located at `traces/trace-0.json`.
+Assuming that the BookInfo application is running, supports 3MileBeach, and the request go through, then the trace information will be added to this directory. For example. If we execute the `requests/request-0.json` request, the corresponding trace information will be located at `traces/trace-0.json`. For example purposes file `traces/trace-0.json` is located in the repository.
 
 
 ### `ldfi-interpreter/graphs`
-Each trace in the `traces` will be examined, and will be used to generate a DAG that corresponds to the given trace. For example. if we have trace information `traces/trace-0.json`, then there will be a corresponding DAG graph `graphs/graph-0.jv`
+Each trace in the `traces` will be examined, and will be used to generate a DAG that corresponds to the given trace. For example. if we have trace information `traces/trace-0.json`, then there will be a corresponding DAG graph `graphs/graph-0.jv`. For example purposes files `graphs/graph-0.gv` and `graphs/graph-0.gv.png` are located in the repository.
 
 # 3MileBeach Tracing and Fault Injection
 

@@ -1,0 +1,9 @@
+// Test Home Request
+digraph {
+	"client-6a15e4ebca494805ba7cf14465315b85" [label="client-6a15e4ebca494805ba7cf14465315b85"]
+	"productpageservice-566e865e0e6f4f8199fdc5bfd391bf45" [label="productpageservice-566e865e0e6f4f8199fdc5bfd391bf45"]
+	"client-6a15e4ebca494805ba7cf14465315b85" -> "productpageservice-566e865e0e6f4f8199fdc5bfd391bf45"
+	"productpageservice-566e865e0e6f4f8199fdc5bfd391bf45" -> "productpageservice-566e865e0e6f4f8199fdc5bfd391bf45"
+	"detailsservice-cc89775da6d3419d8d2a39179cd6e688" [label="detailsservice-cc89775da6d3419d8d2a39179cd6e688"]
+	"productpageservice-566e865e0e6f4f8199fdc5bfd391bf45" -> "detailsservice-cc89775da6d3419d8d2a39179cd6e688"
+}
