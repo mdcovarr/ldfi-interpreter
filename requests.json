@@ -1,0 +1,18 @@
+{
+    "requests":[
+        {
+            "cookie_url": "127.0.0.1:8090",
+            "trace": "",
+            "requests": [
+                {
+                    "method": "GET",
+                    "URL": "/productpage",
+                    "url_values":"",
+                    "message_name": "Product Page",
+                    "trace": "",
+                    "expect": ""
+                }
+            ]
+        }
+    ]
+}

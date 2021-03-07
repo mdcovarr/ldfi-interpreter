@@ -28,7 +28,7 @@ class Client:
         self.host = host
         self.port = port
         self.address = "{0}:{1}".format(host, port)
-        self.uuid = uuid.uuid4().hex
+        self.uuid = "client-{}".format(uuid.uuid4().hex)
 
     def init(self):
         self.conn = http.client.HTTPConnection(self.host, int(self.port))
@@ -73,7 +73,8 @@ class Client:
                 message_name = inner_request["message_name"]
 
                 # Add record of Request
-                fi_trace["records"].append(self.generate_record(uuid=fi_trace["id"], type=SEND, message_name=message_name, service=self.uuid))
+                request_message_name = "{} {}".format(message_name, "Request")
+                fi_trace["records"].append(self.generate_record(uuid=fi_trace["id"], type=SEND, message_name=request_message_name, service=self.uuid))
 
                 # 2. Send Request
                 headers = {
@@ -88,7 +89,8 @@ class Client:
                 fi_trace = json.loads(data)
 
                 # Add record of Response
-                fi_trace["records"].append(self.generate_record(uuid=fi_trace["id"], type=RECV, message_name=message_name, service=self.uuid))
+                response_message_name = "{} {}".format(message_name, "Response")
+                fi_trace["records"].append(self.generate_record(uuid=fi_trace["id"], type=RECV, message_name=response_message_name, service=self.uuid))
 
             outfile = open("./trace.json", "w+")
             outfile.write(json.dumps(fi_trace, indent=4, sort_keys=True))
@@ -107,14 +109,6 @@ class Client:
                 self.requests = data
         except Exception as e:
             print(e)
-
-
-    def send_requests(self):
-        """
-            Method used to handle sending requests
-            to book info application
-        """
-        pass
 
 
 def main():
