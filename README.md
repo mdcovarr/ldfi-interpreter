@@ -49,6 +49,37 @@ Install `requirements.txt`
     pip install -r requirements.txt
 ```
 
+# Documentation
+### `ldfi-interpreter/requests`
+This directory is used in order to make 3MileBeach request to the BookInfo application. Bookinfo with 3MileBeach needs to be running in order for request to go through. Request files need to be in JSON format, that follow thre `request` data structure below. An example is located in the directory named `request-0.json`. It's contents can be viewed below.
+```
+{
+    "requests":[
+        {
+            "cookie_url": "127.0.0.1:8090",
+            "trace": "",
+            "requests": [
+                {
+                    "method": "GET",
+                    "URL": "/productpage",
+                    "url_values":"",
+                    "message_name": "Product Page",
+                    "trace": "",
+                    "expect": ""
+                }
+            ]
+        }
+    ]
+}
+```
+
+
+### `ldfi-interpreter/traces`
+Assuming that the BookInfo application is running, supports 3MileBeach, and the request go through, then the trace information will be added to this directory. For example. If we execute the `requests/request-0.json` request, the corresponding trace information will be located at `traces/trace-0.json`.
+
+
+### `ldfi-interpreter/graphs`
+Each trace in the `traces` will be examined, and will be used to generate a DAG that corresponds to the given trace. For example. if we have trace information `traces/trace-0.json`, then there will be a corresponding DAG graph `graphs/graph-0.jv`
 
 # 3MileBeach Tracing and Fault Injection
 
