@@ -81,6 +81,8 @@ Assuming that the BookInfo application is running, supports 3MileBeach, and the 
 ### `ldfi-interpreter/graphs`
 Each trace in the `traces` will be examined, and will be used to generate a DAG that corresponds to the given trace. For example. if we have trace information `traces/trace-0.json`, then there will be a corresponding DAG graph `graphs/graph-0.jv`. For example purposes files `graphs/graph-0.gv` and `graphs/graph-0.gv.png` are located in the repository.
 
+![Example DAG](./graphs/graph-0.gv.png)
+
 # 3MileBeach Tracing and Fault Injection
 
 ## Client Request
@@ -122,20 +124,15 @@ Each trace in the `traces` will be examined, and will be used to generate a DAG 
         Requests:           []Request
 
 ```
+### Trace Data Structure
 ```
-    Trace Data Structure
-
-
     Trace:
         Id:                 int64
         Records:            []*Records
-        Rlfis:              []*Rlfis
         Tfis:               []*Tfis
 ```
+### Record Data Structure
 ```
-    Record Data Structure
-
-
     MessageType:            int32
         Message_Request:    1
         Message_Response:   2
@@ -151,10 +148,8 @@ Each trace in the `traces` will be examined, and will be used to generate a DAG 
         Uuid:               string
         Service:            string
 ```
+### Timed Fault Injection Data Structure
 ```
-    Fault Data Structure
-
-
     FaultType:              int32
         FaultCrash:         1
         FaultDelay:         2
@@ -169,13 +164,4 @@ Each trace in the `traces` will be examined, and will be used to generate a DAG 
         Name:               []string
         Delay:              int64
         After:              []*TFIMeta
-```
-```
-    Request Level Fault Injection Data Structure (Deleted)
-
-
-    RLFI
-        Type:               FaultType
-        Name:               string
-        Delay:              int64
 ```
