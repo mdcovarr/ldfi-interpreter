@@ -24,6 +24,13 @@ class Client:
     def __init__(self, host, port):
         """
             Default Constructor
+
+            Parameters:
+            host (string): string representation of host e.g. 127.0.0.1
+            port (int): port to use to connect to host
+
+            Returns:
+            None
         """
         self.conn = None
         self.requests = None
@@ -34,6 +41,15 @@ class Client:
         self.trace_dir = os.path.join(CWD, "..", "traces")
 
     def init(self):
+        """
+            Initiating any parameters or settings
+
+            Parameters:
+            None
+
+            Returns:
+            None
+        """
         self.conn = http.client.HTTPConnection(self.host, int(self.port))
         self.conn.connect()
 
@@ -41,6 +57,9 @@ class Client:
         """
             Used to generate a record. Request or Response
             for the client Rest HTTP connection
+
+            Parameters:
+            kwargs (dict): key values for the Record Data Structure
         """
         return {
             "message_name": kwargs["message_name"],
@@ -52,7 +71,13 @@ class Client:
 
     def run(self):
         """
-            request(method, url, body=None, headers={}, ...)
+            Running the Restful Client fault injector and tracer
+
+            Parameters:
+            None
+
+            Returns:
+            None
         """
         # Iterate throught each request/trace
         i = 0
@@ -103,14 +128,21 @@ class Client:
             outfile.write(json.dumps(fi_trace, indent=4, sort_keys=True))
             outfile.close()
 
-            # Create DAG and output
+            # Close connection
             self.conn.close()
+            i += 1
 
 
     def clear_trace_data(self):
         """
             Clearning out old stale trace information
             in traces directory
+
+            Parameters:
+            None
+
+            Returns:
+            None
         """
         for path in os.listdir(self.trace_dir):
             full_path = os.path.join(self.trace_dir, path)
@@ -123,6 +155,12 @@ class Client:
         """
             Helper function used to import
             3MileBeach requests
+
+            Parameters:
+            filename (string): filename of json string to open
+
+            Returns:
+            None
         """
         try:
             with open(filename, "r") as f:
@@ -133,6 +171,9 @@ class Client:
 
 
 def main():
+    """
+        Used for testing of HTTP Client
+    """
     client = Client("127.0.0.1", 8090)
     client.import_requests(os.path.join(CWD, "..", "requests/request-0.json"))
     client.clear_trace_data()
