@@ -1,9 +1,12 @@
 // Test Home Request
 digraph {
-	"client-6a15e4ebca494805ba7cf14465315b85" [label="client-6a15e4ebca494805ba7cf14465315b85"]
-	"productpageservice-566e865e0e6f4f8199fdc5bfd391bf45" [label="productpageservice-566e865e0e6f4f8199fdc5bfd391bf45"]
-	"client-6a15e4ebca494805ba7cf14465315b85" -> "productpageservice-566e865e0e6f4f8199fdc5bfd391bf45"
-	"productpageservice-566e865e0e6f4f8199fdc5bfd391bf45" -> "productpageservice-566e865e0e6f4f8199fdc5bfd391bf45"
-	"detailsservice-cc89775da6d3419d8d2a39179cd6e688" [label="detailsservice-cc89775da6d3419d8d2a39179cd6e688"]
-	"productpageservice-566e865e0e6f4f8199fdc5bfd391bf45" -> "detailsservice-cc89775da6d3419d8d2a39179cd6e688"
+	"client-0611a69dd563454490e882435cd2c89c" [label="client-0611a69dd563454490e882435cd2c89c"]
+	"productpageservice-f12bfa881e4744a5acb14f14e4697f29" [label="productpageservice-f12bfa881e4744a5acb14f14e4697f29"]
+	"client-0611a69dd563454490e882435cd2c89c" -> "productpageservice-f12bfa881e4744a5acb14f14e4697f29"
+	"detailsservice-11dedddf5b114f9685a5004a7c747a18" [label="detailsservice-11dedddf5b114f9685a5004a7c747a18"]
+	"productpageservice-f12bfa881e4744a5acb14f14e4697f29" -> "detailsservice-11dedddf5b114f9685a5004a7c747a18"
+	"reviewsservice-590aad16-db89-4491-a902-7c65fa8e4ff1" [label="reviewsservice-590aad16-db89-4491-a902-7c65fa8e4ff1"]
+	"productpageservice-f12bfa881e4744a5acb14f14e4697f29" -> "reviewsservice-590aad16-db89-4491-a902-7c65fa8e4ff1"
+	"ratingsservice-4df1ad24-6503-4c3b-ba8e-a7b72e8f7219" [label="ratingsservice-4df1ad24-6503-4c3b-ba8e-a7b72e8f7219"]
+	"reviewsservice-590aad16-db89-4491-a902-7c65fa8e4ff1" -> "ratingsservice-4df1ad24-6503-4c3b-ba8e-a7b72e8f7219"
 }

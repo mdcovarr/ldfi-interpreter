@@ -8,7 +8,7 @@
                     "method": "GET",
                     "URL": "/productpage",
                     "url_values":"",
-                    "message_name": "Product Page",
+                    "message_name": "Client Details",
                     "trace": "",
                     "expect": ""
                 }

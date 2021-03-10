@@ -64,7 +64,7 @@ class Client:
         return {
             "message_name": kwargs["message_name"],
             "service": kwargs["service"],
-            "timestamp": int(time.time()),
+            "timestamp": round(time.time() * 1000),
             "type": kwargs["type"],
             "uuid": kwargs["uuid"]
         }
