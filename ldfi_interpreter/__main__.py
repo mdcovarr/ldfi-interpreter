@@ -187,44 +187,37 @@ class Lineage:
         for service in self.services:
             service_clocks[service] = 0
 
-        self.lineage_helper("client-1769190683", service_clocks, 0)
+        self.lineage_helper(data[0][0]["service"], service_clocks)
         self.dot.render("test-output", view=True)
 
-    def lineage_helper(self, curr_service, service_clocks, index):
-        curr_sender = None
-        i = index
+    def lineage_helper(self, curr_service, service_clocks):
+        prev = curr_service
+        i = 0
 
         while i < len(self.data):
             sender, receiver = self.data[i]
 
-            if curr_service == sender["service"]:
-                self.data.pop(i)
-                s_service = sender["service"]
-                r_service = receiver["service"]
+            s_service = sender["service"]
+            r_service = receiver["service"]
 
-                if not curr_sender:
-                    s_str = f"{s_service}_{service_clocks[s_service]}"
-                    curr_sender = s_str
-                else:
-                    s_str = curr_sender
+            if prev != s_service:
+                service_clocks[prev] += 1
 
-                r_str = f"{r_service}_{service_clocks[r_service]}"
+            s_str = f"{s_service}_{service_clocks[s_service]}"
+            r_str = f"{r_service}_{service_clocks[r_service]}"
 
-                if s_str not in self.nodes:
-                    self.nodes.append(s_str)
-                    self.dot.node(s_str, label=s_str)
-                if r_str not in self.nodes:
-                    self.nodes.append(r_str)
-                    self.dot.node(r_str, label=r_str)
+            if s_str not in self.nodes:
+                self.nodes.append(s_str)
+                self.dot.node(s_str, label=s_str)
+            if r_str not in self.nodes:
+                self.nodes.append(r_str)
+                self.dot.node(r_str, label=r_str)
 
-                self.dot.edge(s_str, r_str, label=sender["message_name"])
+            self.dot.edge(s_str, r_str, label=sender["message_name"])
 
-                service_clocks[sender["service"]] += 1
+            prev = s_service
 
-                curr = receiver["service"]
-                self.lineage_helper(curr, service_clocks, i)
-            else:
-                i += 1
+            i += 1
 
 
 def main():
